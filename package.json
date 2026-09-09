@@ -1,0 +1,23 @@
+﻿{
+  "name": "smartbuffet-stream",
+  "version": "1.0.0",
+  "description": "SmartBuffet Stream - Sistema de Gerenciamento da Taxa de Producao em Tempo Real",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/test_engine.js"
+  },
+  "keywords": [
+    "buffet",
+    "socket.io",
+    "express",
+    "realtime",
+    "production-rate"
+  ],
+  "author": "SmartBuffet Team",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.21.2",
+    "socket.io": "^4.8.1"
+  }
+}

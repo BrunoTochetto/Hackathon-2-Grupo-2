@@ -1,0 +1,1321 @@
+/* =========================================================
+   V.E.R - VISÃO ESTRATÉGICA DE RECURSOS
+   SISTEMA DE CORES ACESSÍVEIS (WCAG) & ESTILOS DO WIREFRAME
+   ========================================================= */
+
+:root {
+  /* =========================================================
+     🎨 PALETA DE CORES PRINCIPAL (TOTALMENTE CUSTOMIZÁVEL)
+     Altere as cores abaixo para personalizar a identidade visual:
+     ========================================================= */
+
+  /* 1. Barra Superior (Header) */
+  --header-bg: #5B9A42;                /* Verde do Topo no Wireframe */
+  --header-border: #0f172a;            /* Linha escura de separação */
+  --header-title-color: #0c2340;       /* Azul marinho profundo de alto contraste */
+  --header-subtitle-color: #0a1f03;    /* Subtítulo nítido */
+  --header-user-text: #0a1f03;         /* Texto do usuário no header */
+
+  /* 2. Barra Lateral (Sidebar) */
+  --sidebar-bg: #8DBA61;               /* Verde suave da coluna lateral */
+  --sidebar-text: #0a1c02;             /* Texto dos links de navegação */
+  --sidebar-hover: #75a04a;            /* Efeito hover */
+  --sidebar-active-bg: #47792e;        /* Fundo do item ativo */
+  --sidebar-active-text: #ffffff;      /* Texto do item ativo */
+  --sidebar-border: #568530;           /* Borda da sidebar */
+
+  /* 3. Área de Conteúdo Principal (Informações) */
+  --main-bg: #FBF3B9;                  /* Fundo Creme / Amarelo Claro do Wireframe */
+  --card-bg: #ffffff;                  /* Fundo dos cartões */
+  --card-header-bg: #f8fafc;           /* Fundo do cabeçalho de cartões */
+  --card-border: #d0c585;              /* Borda dos cartões */
+  --text-main: #0f172a;                /* Texto principal super nítido */
+  --text-muted: #334155;               /* Texto secundário de alto contraste */
+  --border-light: #cbd5e1;             /* Bordas internas */
+
+  /* 4. Botão Flutuante (FAB - Rolar ao Topo) */
+  --fab-bg: #5B9A42;                   /* Fundo do botão flutuante */
+  --fab-arrow: #0c2340;                /* Cor da seta */
+  --fab-border: #0f172a;               /* Borda do botão */
+  --fab-hover: #457b2f;                /* Hover */
+
+  /* 5. Ações de Fluxo (Entrada e Saída) */
+  --btn-in-bg: #15803d;                /* Verde escuro para Entrada */
+  --btn-in-hover: #166534;
+  --btn-out-bg: #b91c1c;               /* Vermelho escuro para Saída */
+  --btn-out-hover: #991b1b;
+  --btn-primary: #0c2340;              /* Botão primário */
+  --btn-primary-hover: #071526;
+
+  /* 6. Estados de Produção (Alto Impacto / Acessível) */
+  --color-aumentar-bg: #15803d;        /* Verde Aumentar */
+  --color-aumentar-text: #ffffff;
+  --color-manter-bg: #b45309;          /* Âmbar Manter */
+  --color-manter-text: #ffffff;
+  --color-baixa-bg: #b91c1c;           /* Vermelho Baixa */
+  --color-baixa-text: #ffffff;
+  --color-fechado-bg: #334155;         /* Cinza Escuro Fechado */
+  --color-fechado-text: #ffffff;
+
+  /* 7. Tags e Indicadores */
+  --tag-pico-bg: #c2410c;
+  --tag-baixa-bg: #0369a1;
+  --tag-normal-bg: #334155;
+  --tag-fechado-bg: #0f172a;
+}
+
+/* =========================================================
+   RESET E BASE
+   ========================================================= */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background-color: var(--main-bg);
+  color: var(--text-main);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* =========================================================
+   HEADER UNIFICADO (WIREFRAME EXACT)
+   ========================================================= */
+
+.app-topbar {
+  background-color: var(--header-bg);
+  border-bottom: 3px solid var(--header-border);
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
+  transition: transform 0.3s ease;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+/* Botão Hambúrguer Mobile */
+.btn-hamburger {
+  display: none;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+}
+
+.btn-hamburger span {
+  display: block;
+  width: 26px;
+  height: 3px;
+  background-color: var(--header-border);
+  border-radius: 2px;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+/* Usuário no Header (Sem Círculo de Avatar) */
+.user-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(255, 255, 255, 0.55);
+  padding: 0.35rem 0.85rem;
+  border-radius: 0.5rem;
+  border: 1.5px solid rgba(0, 0, 0, 0.25);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.user-badge:hover {
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.user-name-text {
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: var(--header-user-text);
+  letter-spacing: 0.01em;
+}
+
+.btn-logout-mini {
+  background: rgba(15, 23, 42, 0.15);
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  color: var(--header-user-text);
+  font-size: 0.75rem;
+  font-weight: 800;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  margin-left: 0.3rem;
+  transition: all 0.2s;
+}
+
+.btn-logout-mini:hover {
+  background: rgba(185, 28, 28, 0.25);
+  color: #991b1b;
+}
+
+/* Lado Direito: Logo V.E.R */
+.topbar-right {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.brand-title {
+  font-size: 1.85rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: var(--header-title-color);
+  line-height: 1;
+}
+
+.brand-subtitle {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--header-subtitle-color);
+  margin-top: 0.2rem;
+  letter-spacing: 0.02em;
+}
+
+/* =========================================================
+   ESTRUTURA PRINCIPAL COM SIDEBAR E CONTEÚDO
+   ========================================================= */
+
+.app-body-layout {
+  display: flex;
+  flex: 1;
+  min-height: calc(100vh - 65px);
+  position: relative;
+}
+
+/* Barra Lateral (Desktop) */
+.app-sidebar {
+  width: 220px;
+  background-color: var(--sidebar-bg);
+  border-right: 2px solid var(--sidebar-border);
+  padding: 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+/* QUANDO NÃO ESTIVER LOGADO: ESCONDER SIDEBAR E HAMBÚRGUER */
+body.not-logged-in .app-sidebar,
+body.not-logged-in .btn-hamburger {
+  display: none !important;
+}
+
+.sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  color: var(--sidebar-text);
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.95rem;
+  font-weight: 800;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 100%;
+}
+
+.sidebar-nav-item:hover {
+  background-color: var(--sidebar-hover);
+}
+
+.sidebar-nav-item.active {
+  background-color: var(--sidebar-active-bg);
+  color: var(--sidebar-active-text);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar-nav-item .nav-icon {
+  font-size: 1.15rem;
+}
+
+/* Área Central de Informações */
+.app-content-area {
+  flex: 1;
+  background-color: var(--main-bg);
+  padding: 1.5rem;
+  overflow-y: auto;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Backdrop escuro para fechar o menu mobile */
+.sidebar-backdrop {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 80;
+}
+
+/* =========================================================
+   BOTÃO FLUTUANTE (SCROLL TO TOP / FAB)
+   ========================================================= */
+
+.fab-scroll-top {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background-color: var(--fab-bg);
+  border: 2px solid var(--fab-border);
+  color: var(--fab-arrow);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s, background-color 0.2s;
+  z-index: 90;
+}
+
+.fab-scroll-top:hover {
+  background-color: var(--fab-hover);
+  transform: translateY(-2px);
+}
+
+.fab-scroll-top:active {
+  transform: translateY(0);
+}
+
+/* =========================================================
+   GERENCIADOR DE VISÕES / TELAS
+   ========================================================= */
+
+.screen-view {
+  display: none;
+}
+
+.screen-view.active {
+  display: block;
+}
+
+/* =========================================================
+   1. TELA DE LOGIN / AUTENTICAÇÃO
+   ========================================================= */
+
+#view-login {
+  min-height: calc(100vh - 75px);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem 1rem;
+}
+
+#view-login.active {
+  display: flex;
+}
+
+.login-card {
+  background: var(--card-bg);
+  border: 2px solid var(--card-border);
+  border-radius: 1rem;
+  padding: 2.25rem;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+.login-brand-header {
+  text-align: center;
+  margin-bottom: 1.75rem;
+}
+
+.login-brand-header h1 {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: var(--header-title-color);
+  letter-spacing: 0.05em;
+}
+
+.login-brand-header p {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-top: 0.25rem;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 0.4rem;
+}
+
+.form-group input[type="text"],
+.form-group input[type="password"] {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 0.5rem;
+  color: var(--text-main);
+  font-size: 1rem;
+  font-weight: 600;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+  border-color: var(--btn-primary);
+}
+
+.role-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.role-option {
+  cursor: pointer;
+}
+
+.role-option input {
+  display: none;
+}
+
+.role-box {
+  background: #f8fafc;
+  border: 2px solid #cbd5e1;
+  border-radius: 0.5rem;
+  padding: 1rem 0.5rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  transition: all 0.2s;
+}
+
+.role-option input:checked + .role-box {
+  border-color: var(--header-title-color);
+  background: #e0f2fe;
+}
+
+.role-icon {
+  font-size: 1.4rem;
+}
+
+.role-title {
+  font-weight: 800;
+  font-size: 0.95rem;
+  color: var(--text-main);
+}
+
+.role-desc {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.btn-primary-large {
+  width: 100%;
+  padding: 0.85rem;
+  background: var(--btn-primary);
+  color: #fff;
+  font-weight: 800;
+  font-size: 1.05rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  margin-top: 0.5rem;
+  transition: background 0.2s;
+}
+
+.btn-primary-large:hover {
+  background: var(--btn-primary-hover);
+}
+
+.error-msg {
+  background: #fee2e2;
+  color: #991b1b;
+  border: 1px solid #f87171;
+  border-radius: 0.5rem;
+  padding: 0.6rem;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.login-footer {
+  margin-top: 1.5rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* =========================================================
+   2. DASHBOARD DA RECEPÇÃO (INFORMAÇÕES)
+   ========================================================= */
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  background: var(--card-bg);
+  padding: 0.85rem 1.25rem;
+  border-radius: 0.75rem;
+  border: 1.5px solid var(--card-border);
+}
+
+.dashboard-title-group h2 {
+  font-size: 1.35rem;
+  font-weight: 900;
+  color: var(--text-main);
+}
+
+.dashboard-clock {
+  font-family: monospace;
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: var(--header-title-color);
+  background: #f1f5f9;
+  padding: 0.35rem 0.75rem;
+  border-radius: 0.375rem;
+  border: 1px solid #cbd5e1;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+@media (max-width: 992px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dashboard-col {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.panel-card {
+  background: var(--card-bg);
+  border: 1.5px solid var(--card-border);
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.85rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.card-header h3 {
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: var(--text-main);
+}
+
+.section-hint {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+/* Status Pill */
+.status-pill {
+  font-size: 0.75rem;
+  font-weight: 900;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  background: var(--tag-normal-bg);
+  color: #fff;
+  letter-spacing: 0.03em;
+}
+
+.status-pill.pico {
+  background: var(--tag-pico-bg);
+}
+
+.status-pill.baixa {
+  background: var(--tag-baixa-bg);
+}
+
+.status-pill.fechado, .status-pill.encerramento {
+  background: var(--tag-fechado-bg);
+}
+
+/* Botões de Registro de Fluxo (+1, +5, -1, -5) */
+.flow-actions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.flow-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  background: #f8fafc;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1.5px solid #cbd5e1;
+}
+
+.group-label {
+  font-size: 0.85rem;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-align: center;
+}
+
+.text-success { color: var(--btn-in-bg) !important; }
+.text-danger { color: var(--btn-out-bg) !important; }
+
+.btn-flow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 0.5rem;
+  border-radius: 0.5rem;
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform 0.1s, opacity 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.btn-flow:active {
+  transform: scale(0.96);
+}
+
+.btn-in-1, .btn-in-5 {
+  background: var(--btn-in-bg);
+  color: #fff;
+}
+
+.btn-in-1:hover, .btn-in-5:hover {
+  background: var(--btn-in-hover);
+}
+
+.btn-out-1, .btn-out-5 {
+  background: var(--btn-out-bg);
+  color: #fff;
+}
+
+.btn-out-1:hover, .btn-out-5:hover {
+  background: var(--btn-out-hover);
+}
+
+.flow-num {
+  font-size: 1.65rem;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.flow-text {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin-top: 0.25rem;
+}
+
+/* Fluxo com Quantidade Específica Customizada */
+.custom-flow-box {
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 0.5rem;
+  padding: 0.85rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.custom-flow-label {
+  font-size: 0.8rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.custom-flow-controls {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.custom-flow-input {
+  width: 90px;
+  padding: 0.5rem 0.6rem;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  font-weight: 800;
+  text-align: center;
+  color: var(--text-main);
+  background: #ffffff;
+}
+
+.btn-custom-flow {
+  flex: 1;
+  padding: 0.55rem 0.75rem;
+  border-radius: 0.375rem;
+  border: none;
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: #fff;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-custom-flow.btn-in {
+  background: var(--btn-in-bg);
+}
+
+.btn-custom-flow.btn-out {
+  background: var(--btn-out-bg);
+}
+
+.btn-custom-flow:hover {
+  opacity: 0.9;
+}
+
+/* Métricas da Janela Móvel */
+.metrics-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.metric-box {
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 0.5rem;
+  padding: 0.85rem 0.5rem;
+  text-align: center;
+}
+
+.metric-box.highlight {
+  border-color: var(--header-title-color);
+  background: #e0f2fe;
+}
+
+.metric-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--text-muted);
+  margin-bottom: 0.25rem;
+}
+
+.metric-value {
+  font-size: 1.5rem;
+  font-weight: 900;
+  font-family: monospace;
+}
+
+.production-summary-box {
+  background: #f8fafc;
+  border-radius: 0.5rem;
+  padding: 0.85rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1.5px solid #cbd5e1;
+}
+
+.summary-label {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--text-muted);
+}
+
+.summary-badge {
+  font-weight: 900;
+  font-size: 0.95rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 0.375rem;
+  letter-spacing: 0.02em;
+}
+
+.state-aumentar {
+  background: var(--color-aumentar-bg) !important;
+  color: var(--color-aumentar-text) !important;
+}
+
+.state-manter {
+  background: var(--color-manter-bg) !important;
+  color: var(--color-manter-text) !important;
+}
+
+.state-baixa {
+  background: var(--color-baixa-bg) !important;
+  color: var(--color-baixa-text) !important;
+}
+
+.state-fechado {
+  background: var(--color-fechado-bg) !important;
+  color: var(--color-fechado-text) !important;
+}
+
+/* Simulação de Horários */
+.simulation-card {
+  background: #fffbeb;
+  border: 1.5px dashed #d97706;
+}
+
+.simulation-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.btn-sim {
+  background: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  color: var(--text-main);
+  padding: 0.45rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-sim:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+}
+
+.btn-sim.active {
+  background: var(--header-title-color);
+  border-color: var(--header-title-color);
+  color: #fff;
+  font-weight: 900;
+}
+
+.btn-sim-reset {
+  background: #fee2e2;
+  border: 1px solid #f87171;
+  color: #991b1b;
+  padding: 0.45rem 0.75rem;
+  border-radius: 0.375rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  cursor: pointer;
+  margin-left: auto;
+}
+
+.btn-sim-reset:hover {
+  background: #fecaca;
+}
+
+/* =========================================================
+   CONFIGURAÇÃO DE HORÁRIOS (ABERTURA/FECHAMENTO E MÚLTIPLOS)
+   ========================================================= */
+
+.day-tabs {
+  display: flex;
+  gap: 0.35rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border-light);
+  margin-bottom: 1rem;
+}
+
+.day-tab {
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  color: var(--text-muted);
+  padding: 0.4rem 0.75rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  font-weight: 800;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+
+.day-tab:hover {
+  background: #e2e8f0;
+}
+
+.day-tab.active {
+  background: var(--header-title-color);
+  border-color: var(--header-title-color);
+  color: #fff;
+}
+
+.schedule-day-title {
+  font-weight: 900;
+  font-size: 1.05rem;
+  color: var(--header-title-color);
+  margin-bottom: 0.85rem;
+  text-transform: capitalize;
+}
+
+.schedule-hours-group {
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 0.5rem;
+  padding: 0.85rem;
+  margin-bottom: 0.85rem;
+}
+
+.schedule-hours-group h4 {
+  font-size: 0.85rem;
+  font-weight: 900;
+  margin-bottom: 0.5rem;
+  color: var(--text-main);
+}
+
+.schedule-slot-group {
+  background: #f8fafc;
+  padding: 0.85rem;
+  border-radius: 0.5rem;
+  margin-bottom: 0.85rem;
+  border: 1.5px solid #cbd5e1;
+}
+
+.slot-group-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.6rem;
+}
+
+.slot-group-header h4 {
+  font-size: 0.85rem;
+  font-weight: 900;
+  color: var(--text-main);
+}
+
+.btn-add-slot {
+  background: #e0f2fe;
+  border: 1px solid #0284c7;
+  color: #0369a1;
+  font-weight: 800;
+  font-size: 0.75rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-add-slot:hover {
+  background: #0284c7;
+  color: #fff;
+}
+
+.slots-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.slot-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #ffffff;
+  padding: 0.4rem 0.6rem;
+  border-radius: 0.35rem;
+  border: 1px solid #cbd5e1;
+}
+
+.slot-row label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.slot-row input[type="time"] {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: var(--text-main);
+  padding: 0.25rem 0.4rem;
+  border-radius: 0.25rem;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.btn-remove-slot {
+  background: #fee2e2;
+  border: 1px solid #f87171;
+  color: #991b1b;
+  font-weight: 900;
+  font-size: 0.8rem;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: auto;
+  transition: all 0.2s;
+}
+
+.btn-remove-slot:hover {
+  background: #ef4444;
+  color: #fff;
+}
+
+.btn-secondary {
+  background: var(--sidebar-bg);
+  color: #0a1c02;
+  border: 1.5px solid var(--sidebar-border);
+  padding: 0.65rem 1.1rem;
+  border-radius: 0.375rem;
+  font-weight: 900;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background 0.2s;
+}
+
+.btn-secondary:hover {
+  background: var(--sidebar-hover);
+}
+
+.feedback-text {
+  font-size: 0.85rem;
+  margin-left: 0.75rem;
+  color: var(--btn-in-bg);
+  font-weight: 800;
+}
+
+/* Histórico de Movimentações */
+.history-table-wrapper {
+  max-height: 190px;
+  overflow-y: auto;
+  border: 1px solid var(--border-light);
+  border-radius: 0.375rem;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.history-table th, .history-table td {
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.history-table th {
+  background: #f1f5f9;
+  color: var(--text-main);
+  font-weight: 900;
+  position: sticky;
+  top: 0;
+}
+
+.text-center {
+  text-align: center !important;
+}
+
+/* =========================================================
+   3. DISPLAY DA COZINHA (ALTO IMPACTO VISUAL & FULLSCREEN)
+   ========================================================= */
+
+.cozinha-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-height: 70vh;
+}
+
+.cozinha-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--card-bg);
+  padding: 0.85rem 1.25rem;
+  border-radius: 0.75rem;
+  border: 1.5px solid var(--card-border);
+}
+
+.cozinha-header-title {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cozinha-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.cozinha-tag {
+  background: var(--state-manter-bg);
+  color: #fff;
+  font-weight: 900;
+  font-size: 0.8rem;
+  padding: 0.25rem 0.6rem;
+  border-radius: 0.25rem;
+  letter-spacing: 0.05em;
+}
+
+.btn-sound, .btn-fullscreen {
+  background: #f1f5f9;
+  border: 1.5px solid #cbd5e1;
+  color: var(--text-main);
+  padding: 0.4rem 0.85rem;
+  border-radius: 0.375rem;
+  font-size: 0.85rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.btn-fullscreen:hover, .btn-sound:hover {
+  background: #e2e8f0;
+}
+
+.btn-sound.muted {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+.cozinha-main-display {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 380px;
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  transition: background-color 0.3s ease;
+}
+
+.production-command-box {
+  width: 100%;
+  height: 100%;
+  min-height: 340px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1.25rem;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+}
+
+.command-status-text {
+  font-size: clamp(2.4rem, 6.5vw, 5.5rem);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  line-height: 1.1;
+  user-select: none;
+}
+
+/* Variações de Fundo da Cozinha */
+.cozinha-main-display.bg-aumentar .production-command-box {
+  background-color: var(--color-aumentar-bg);
+  color: var(--color-aumentar-text);
+  border: 5px solid #166534;
+}
+
+.cozinha-main-display.bg-manter .production-command-box {
+  background-color: var(--color-manter-bg);
+  color: var(--color-manter-text);
+  border: 5px solid #92400e;
+}
+
+.cozinha-main-display.bg-baixa .production-command-box {
+  background-color: var(--color-baixa-bg);
+  color: var(--color-baixa-text);
+  border: 5px solid #991b1b;
+}
+
+.cozinha-main-display.bg-fechado .production-command-box {
+  background-color: var(--color-fechado-bg);
+  color: var(--color-fechado-text);
+  border: 5px solid #0f172a;
+}
+
+/* Rodapé de Informações da Cozinha */
+.cozinha-footer-indicator {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: var(--card-bg);
+  border: 1.5px solid var(--card-border);
+  border-radius: 0.75rem;
+  padding: 1rem 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.indicator-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.indicator-label {
+  color: var(--text-muted);
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+
+.indicator-val {
+  font-weight: 900;
+  color: var(--text-main);
+  font-size: 0.95rem;
+}
+
+/* =========================================================
+   MODO FULLSCREEN NA COZINHA (OCULTA HEADER E SIDEBAR)
+   ========================================================= */
+
+body.cozinha-fullscreen .app-topbar,
+body.cozinha-fullscreen .app-sidebar,
+body.cozinha-fullscreen .fab-scroll-top,
+body.cozinha-fullscreen .sidebar-backdrop {
+  display: none !important;
+}
+
+body.cozinha-fullscreen .app-body-layout {
+  min-height: 100vh;
+}
+
+body.cozinha-fullscreen .app-content-area {
+  padding: 0 !important;
+  max-width: 100vw !important;
+  margin: 0 !important;
+}
+
+body.cozinha-fullscreen .cozinha-card {
+  height: 100vh;
+  border-radius: 0;
+  border: none;
+}
+
+body.cozinha-fullscreen .cozinha-main-display {
+  min-height: calc(100vh - 150px);
+}
+
+/* =========================================================
+   RESPONSIVIDADE (MOBILE WIREFRAME)
+   ========================================================= */
+
+@media (max-width: 768px) {
+  .btn-hamburger {
+    display: flex;
+  }
+
+  .topbar-left {
+    gap: 0.5rem;
+  }
+
+  .brand-title {
+    font-size: 1.45rem;
+  }
+
+  .brand-subtitle {
+    font-size: 0.7rem;
+  }
+
+  /* Sidebar vira Drawer deslizante no Mobile */
+  .app-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 85;
+    transform: translateX(-100%);
+    box-shadow: 4px 0 15px rgba(0, 0, 0, 0.2);
+    padding-top: 4.5rem;
+  }
+
+  .app-sidebar.open {
+    transform: translateX(0);
+  }
+
+  .sidebar-backdrop.active {
+    display: block;
+  }
+
+  .app-content-area {
+    padding: 1rem;
+  }
+
+  .metrics-row {
+    grid-template-columns: 1fr;
+  }
+
+  .time-range-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .fab-scroll-top {
+    bottom: 1rem;
+    right: 1rem;
+    width: 42px;
+    height: 42px;
+    font-size: 1.2rem;
+  }
+}

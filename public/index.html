@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>V.E.R - Visão Estratégica de Recursos</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body class="not-logged-in">
+
+  <!-- ==================================================== -->
+  <!-- BARRA SUPERIOR (HEADER PADRÃO DO WIREFRAME)          -->
+  <!-- ==================================================== -->
+  <header class="app-topbar" id="app-topbar">
+    <div class="topbar-left">
+      <button class="btn-hamburger" id="btn-toggle-menu" aria-label="Abrir Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      
+    </div>
+    <div class="topbar-right">
+      <h1 class="brand-title">V.E.R</h1>
+      <span class="brand-subtitle">Visão Estratégica de Recursos</span>
+    </div>
+  </header>
+
+  <!-- ==================================================== -->
+  <!-- ESTRUTURA PRINCIPAL (SIDEBAR + CONTEÚDO)             -->
+  <!-- ==================================================== -->
+  <div class="app-body-layout">
+    
+    <!-- Backdrop para fechar menu mobile -->
+    <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
+
+    <!-- Barra Lateral de Navegação (Sidebar) -->
+    <aside class="app-sidebar" id="app-sidebar">
+      <button type="button" class="sidebar-nav-item active" data-target="view-recepcao" id="nav-item-recepcao">
+        <span class="nav-icon">📋</span>
+        <span>Início</span>
+      </button>
+      <button type="button" class="sidebar-nav-item" data-target="view-cozinha" id="nav-item-cozinha">
+        <span class="nav-icon">🔥</span>
+        <span>Cozinha</span>
+      </button>
+      <button type="button" class="sidebar-nav-item" data-target="view-login" id="nav-item-login">
+        <span class="nav-icon" id="nav-login-icon">🔐</span>
+        <span id="nav-login-text">Login</span>
+      </button>
+    </aside>
+
+    <!-- Área de Conteúdo Principal (Informações) -->
+    <main class="app-content-area" id="main-content-area">
+
+      <!-- ==================================================== -->
+      <!-- 1. TELA DE LOGIN / SELEÇÃO DE PERFIL                 -->
+      <!-- ==================================================== -->
+      <section id="view-login" class="screen-view active">
+        <div class="login-card">
+          <div class="login-brand-header">
+            <h1>V.E.R</h1>
+            <p>Visão Estratégica de Recursos</p>
+          </div>
+
+          <form id="login-form">
+            <div class="form-group">
+              <label for="input-rest-id">ID do Restaurante</label>
+              <input type="text" id="input-rest-id" value="rest_01" required autocomplete="username">
+            </div>
+
+            <div class="form-group">
+              <label for="input-senha">Senha de Acesso</label>
+              <input type="password" id="input-senha" value="admin" required autocomplete="current-password">
+            </div>
+
+            <div class="form-group">
+              <label>Selecione o Terminal / Perfil:</label>
+              <div class="role-selector">
+                <label class="role-option">
+                  <input type="radio" name="role" value="RECEPCAO" checked>
+                  <div class="role-box">
+                    <span class="role-icon">📋</span>
+                    <span class="role-title">Recepção</span>
+                    <span class="role-desc">Registro de fluxo e horários</span>
+                  </div>
+                </label>
+
+                <label class="role-option">
+                  <input type="radio" name="role" value="COZINHA">
+                  <div class="role-box">
+                    <span class="role-icon">🔥</span>
+                    <span class="role-title">Cozinha</span>
+                    <span class="role-desc">Display visual de produção</span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
+            <div id="login-error" class="error-msg hidden"></div>
+
+            <button type="submit" id="btn-login" class="btn-primary-large">
+              Entrar
+            </button>
+          </form>
+
+          <div class="login-footer">
+            <p><small>Abra abas simultâneas como <strong>Recepção</strong> e <strong>Cozinha</strong> para testar a sincronização.</small></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================== -->
+      <!-- 2. VISÃO 1: PAINEL DA RECEPÇÃO (INÍCIO)              -->
+      <!-- ==================================================== -->
+      <section id="view-recepcao" class="screen-view">
+        <div class="dashboard-header">
+          <div class="dashboard-title-group">
+            <h2 id="rec-rest-name">Painel da Recepção</h2>
+          </div>
+          <div class="dashboard-clock" id="rec-clock">--:--:--</div>
+        </div>
+
+        <div class="dashboard-grid">
+          <!-- Coluna Esquerda: Ações de Registro de Fluxo -->
+          <div class="dashboard-col">
+            
+            <div class="panel-card">
+              <div class="card-header">
+                <h3>Registro de Fluxo de Clientes</h3>
+                <span class="status-pill" id="rec-tipo-horario">NORMAL</span>
+              </div>
+
+              <p class="section-hint">Lance entradas ou saídas rápidas ou defina uma quantidade específica:</p>
+
+              <!-- Botões Rápidos -->
+              <div class="flow-actions-grid">
+                <div class="flow-group">
+                  <span class="group-label text-success">ENTRADA</span>
+                  <button type="button" class="btn-flow btn-in-1" id="btn-in-1">
+                    <span class="flow-num">+1</span>
+                    <span class="flow-text">Cliente</span>
+                  </button>
+                  <button type="button" class="btn-flow btn-in-5" id="btn-in-5">
+                    <span class="flow-num">+5</span>
+                    <span class="flow-text">Clientes</span>
+                  </button>
+                </div>
+
+                <div class="flow-group">
+                  <span class="group-label text-danger">SAÍDA</span>
+                  <button type="button" class="btn-flow btn-out-1" id="btn-out-1">
+                    <span class="flow-num">-1</span>
+                    <span class="flow-text">Cliente</span>
+                  </button>
+                  <button type="button" class="btn-flow btn-out-5" id="btn-out-5">
+                    <span class="flow-num">-5</span>
+                    <span class="flow-text">Clientes</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Lançamento de Quantidade Específica -->
+              <div class="custom-flow-box">
+                <span class="custom-flow-label">Lançar Quantidade Específica de Clientes:</span>
+                <div class="custom-flow-controls">
+                  <input type="number" id="input-custom-flow-qtd" class="custom-flow-input" min="1" max="500" value="10" placeholder="Qtd">
+                  <button type="button" class="btn-custom-flow btn-in" id="btn-custom-in">+ Lançar Entrada</button>
+                  <button type="button" class="btn-custom-flow btn-out" id="btn-custom-out">- Lançar Saída</button>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Métricas da Janela Móvel dos Últimos 15 Minutos -->
+            <div class="panel-card">
+              <div class="card-header">
+                <h3>Métricas dos Últimos 15 Minutos</h3>
+              </div>
+
+              <div class="metrics-row">
+                <div class="metric-box">
+                  <span class="metric-label">Entradas (15m)</span>
+                  <span class="metric-value text-success" id="rec-entradas">0</span>
+                </div>
+
+                <div class="metric-box">
+                  <span class="metric-label">Saídas (15m)</span>
+                  <span class="metric-value text-danger" id="rec-saidas">0</span>
+                </div>
+
+                <div class="metric-box highlight">
+                  <span class="metric-label">Saldo do Fluxo</span>
+                  <span class="metric-value" id="rec-saldo">0</span>
+                </div>
+              </div>
+
+              <div class="production-summary-box">
+                <span class="summary-label">Comando Atual de Produção:</span>
+                <span class="summary-badge" id="rec-estado-prod">CALCULANDO...</span>
+              </div>
+            </div>
+
+            <!-- Ferramenta de Teste e Simulação de Horário -->
+            <div class="panel-card simulation-card">
+              <div class="card-header">
+                <h4>Simulação de Horário</h4>
+              </div>
+              <p class="section-hint">Alterne horários para testar transição de PICO, BAIXA, NORMAL e FECHADO:</p>
+              <div class="simulation-controls">
+                <button type="button" class="btn-sim" data-time="12:30">Simular 12:30 (Pico)</button>
+                <button type="button" class="btn-sim" data-time="15:30">Simular 15:30 (Baixa)</button>
+                <button type="button" class="btn-sim" data-time="17:30">Simular 17:30 (Normal)</button>
+                <button type="button" class="btn-sim" data-time="08:00">Simular 08:00 (Fechado)</button>
+                <button type="button" class="btn-sim active" id="btn-sim-real">Hora Real</button>
+                <button type="button" class="btn-sim-reset" id="btn-limpar-fluxo">Zerar Histórico</button>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Coluna Direita: Configuração de Horários e Histórico -->
+          <div class="dashboard-col">
+            
+            <!-- Configuração de Horários da Semana -->
+            <div class="panel-card">
+              <div class="card-header">
+                <h3>Horários por Dia da Semana</h3>
+              </div>
+
+              <div class="day-tabs" id="day-tabs">
+                <button class="day-tab active" data-day="segunda">Seg</button>
+                <button class="day-tab" data-day="terca">Ter</button>
+                <button class="day-tab" data-day="quarta">Qua</button>
+                <button class="day-tab" data-day="quinta">Qui</button>
+                <button class="day-tab" data-day="sexta">Sex</button>
+                <button class="day-tab" data-day="sabado">Sáb</button>
+                <button class="day-tab" data-day="domingo">Dom</button>
+              </div>
+
+              <div class="schedule-editor" id="schedule-editor">
+                <div class="schedule-day-title" id="current-day-label">Segunda-feira</div>
+
+                <!-- Horário de Funcionamento (Abertura e Fechamento) -->
+                <div class="schedule-hours-group">
+                  <h4>⏰ Horário de Funcionamento</h4>
+                  <div class="slot-row">
+                    <label>Abertura: <input type="time" id="input-abertura" value="11:00"></label>
+                    <label>Fechamento: <input type="time" id="input-fechamento" value="23:00"></label>
+                  </div>
+                </div>
+
+                <!-- Múltiplos Horários de Pico -->
+                <div class="schedule-slot-group">
+                  <div class="slot-group-header">
+                    <h4>🔥 Horários de Pico</h4>
+                    <button type="button" class="btn-add-slot" id="btn-add-pico-slot">+ Adicionar Faixa</button>
+                  </div>
+                  <div class="slots-container" id="pico-slots-container">
+                    <!-- Gerado dinamicamente -->
+                  </div>
+                </div>
+
+                <!-- Múltiplos Horários de Baixa -->
+                <div class="schedule-slot-group">
+                  <div class="slot-group-header">
+                    <h4>📉 Horários de Baixa</h4>
+                    <button type="button" class="btn-add-slot" id="btn-add-baixa-slot">+ Adicionar Faixa</button>
+                  </div>
+                  <div class="slots-container" id="baixa-slots-container">
+                    <!-- Gerado dinamicamente -->
+                  </div>
+                </div>
+
+                <button type="button" class="btn-secondary" id="btn-salvar-horarios">
+                  Salvar Horários deste Dia
+                </button>
+                <span id="save-horarios-feedback" class="feedback-text"></span>
+              </div>
+            </div>
+
+            <!-- Últimos Lançamentos de Movimento -->
+            <div class="panel-card">
+              <div class="card-header">
+                <h3>Últimas Movimentações</h3>
+              </div>
+              <div class="history-table-wrapper">
+                <table class="history-table">
+                  <thead>
+                    <tr>
+                      <th>Hora</th>
+                      <th>Tipo</th>
+                      <th>Qtd</th>
+                    </tr>
+                  </thead>
+                  <tbody id="rec-movimentos-tbody">
+                    <tr><td colspan="3" class="text-center">Nenhum movimento recente</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================================================== -->
+      <!-- 3. VISÃO 2: DISPLAY DA COZINHA (COM FULLSCREEN)      -->
+      <!-- ==================================================== -->
+      <section id="view-cozinha" class="screen-view">
+        <div class="cozinha-card">
+          <div class="cozinha-header">
+            <div class="cozinha-header-title">
+              <span class="cozinha-tag">COZINHA</span>
+              <h2 id="coz-rest-name">Restaurante</h2>
+            </div>
+            <div class="cozinha-header-actions">
+              <button id="btn-toggle-sound" class="btn-sound">🔔 Som: Ativado</button>
+              <button id="btn-toggle-fullscreen" class="btn-fullscreen">⛶ Tela Cheia</button>
+            </div>
+          </div>
+
+          <!-- Banner de Comando de Produção -->
+          <div class="cozinha-main-display">
+            <div class="production-command-box" id="coz-command-box">
+              <div class="command-status-text" id="coz-estado-texto">
+                SINCRONIZANDO...
+              </div>
+            </div>
+          </div>
+
+          <!-- Rodapé com Informações -->
+          <div class="cozinha-footer-indicator">
+            <div class="indicator-item">
+              <span class="indicator-label">Dia:</span>
+              <span class="indicator-val" id="coz-dia-semana">--</span>
+            </div>
+            <div class="indicator-item">
+              <span class="indicator-label">Faixa:</span>
+              <span class="indicator-val" id="coz-tipo-horario">--</span>
+            </div>
+            <div class="indicator-item">
+              <span class="indicator-label">Saldo (15 min):</span>
+              <span class="indicator-val" id="coz-saldo-fluxo">--</span>
+            </div>
+            <div class="indicator-item">
+              <span class="indicator-label">Hora:</span>
+              <span class="indicator-val" id="coz-hora-atual">--:--</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Socket.io Client -->
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
+
