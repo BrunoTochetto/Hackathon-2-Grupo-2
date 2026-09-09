@@ -1,0 +1,57 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Função auxiliar para verificar autenticação
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Função para verificar se o usuário é o proprietário do documento
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Regras para a coleção de usuários
+    match /users/{userId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    // Regras multi-tenant para estabelecimentos e subcoleções
+    match /establishments/{establishmentId} {
+      // Permite leitura e escrita apenas se o usuário for o proprietário ou pertencer ao estabelecimento
+      allow read, write: if isAuthenticated() && 
+        (resource == null || resource.data.ownerId == request.auth.uid || request.resource.data.ownerId == request.auth.uid);
+
+      // Subcoleção de alimentos do estabelecimento
+      match /foods/{foodId} {
+        allow read, write: if isAuthenticated();
+      }
+
+      // Subcoleção de movimentações (entradas/saídas de pessoas)
+      match /movements/{movementId} {
+        allow read, write: if isAuthenticated();
+      }
+
+      // Subcoleção de registros de produção
+      match /productions/{productionId} {
+        allow read, write: if isAuthenticated();
+      }
+
+      // Subcoleção de histórico diário consolidado
+      match /history/{historyId} {
+        allow read, write: if isAuthenticated();
+      }
+
+      // Subcoleção de descartes e desperdício
+      match /waste/{wasteId} {
+        allow read, write: if isAuthenticated();
+      }
+    }
+
+    // Bloqueia qualquer acesso externo não mapeado por padrão
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
