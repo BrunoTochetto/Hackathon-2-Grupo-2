@@ -17,6 +17,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 // ==========================================
 // 1. BANCO DE DADOS EM MEMÓRIA (VOLÁTIL)
 // ==========================================
+
+const DEFAULT_DIAS_SEMANA = {
+  segunda: { abertura: '11:00', fechamento: '23:00', pico: [{ inicio: '11:30', fim: '14:00' }, { inicio: '19:00', fim: '21:30' }], baixa: [{ inicio: '14:30', fim: '17:00' }, { inicio: '22:00', fim: '23:00' }] },
+  terca:   { abertura: '11:00', fechamento: '23:00', pico: [{ inicio: '11:30', fim: '14:00' }, { inicio: '19:00', fim: '21:30' }], baixa: [{ inicio: '14:30', fim: '17:00' }, { inicio: '22:00', fim: '23:00' }] },
+  quarta:  { abertura: '11:00', fechamento: '23:00', pico: [{ inicio: '11:30', fim: '14:00' }, { inicio: '19:00', fim: '21:30' }], baixa: [{ inicio: '14:30', fim: '17:00' }, { inicio: '22:00', fim: '23:00' }] },
+  quinta:  { abertura: '11:00', fechamento: '23:00', pico: [{ inicio: '11:30', fim: '14:00' }, { inicio: '19:00', fim: '21:30' }], baixa: [{ inicio: '14:30', fim: '17:00' }, { inicio: '22:00', fim: '23:00' }] },
+  sexta:   { abertura: '11:00', fechamento: '23:30', pico: [{ inicio: '11:30', fim: '14:30' }, { inicio: '19:00', fim: '22:00' }], baixa: [{ inicio: '15:00', fim: '17:30' }, { inicio: '22:30', fim: '23:30' }] },
+  sabado:  { abertura: '11:30', fechamento: '23:30', pico: [{ inicio: '12:00', fim: '15:00' }, { inicio: '19:30', fim: '22:30' }], baixa: [{ inicio: '15:30', fim: '18:00' }, { inicio: '22:30', fim: '23:30' }] },
+  domingo: { abertura: '11:30', fechamento: '22:00', pico: [{ inicio: '12:00', fim: '15:30' }], baixa: [{ inicio: '16:00', fim: '18:00' }, { inicio: '21:00', fim: '22:00' }] }
+};
+
 const memoryStore = {
   restaurantes: {
     rest_01: {
@@ -24,19 +35,54 @@ const memoryStore = {
       nome: 'V.E.R Matriz',
       senha: 'admin',
       simulatedTime: null, // "HH:mm" para simulação se desejado
-      dias_semana: {
-        segunda: { abertura: '11:00', fechamento: '23:00', pico: [{ inicio: '11:30', fim: '14:00' }, { inicio: '19:00', fim: '21:30' }], baixa: [{ inicio: '14:30', fim: '17:00' }, { inicio: '22:00', fim: '23:00' }] },
-        terca:   { abertura: '11:00', fechamento: '23:00', pico: [{ inicio: '11:30', fim: '14:00' }, { inicio: '19:00', fim: '21:30' }], baixa: [{ inicio: '14:30', fim: '17:00' }, { inicio: '22:00', fim: '23:00' }] },
-        quarta:  { abertura: '11:00', fechamento: '23:00', pico: [{ inicio: '11:30', fim: '14:00' }, { inicio: '19:00', fim: '21:30' }], baixa: [{ inicio: '14:30', fim: '17:00' }, { inicio: '22:00', fim: '23:00' }] },
-        quinta:  { abertura: '11:00', fechamento: '23:00', pico: [{ inicio: '11:30', fim: '14:00' }, { inicio: '19:00', fim: '21:30' }], baixa: [{ inicio: '14:30', fim: '17:00' }, { inicio: '22:00', fim: '23:00' }] },
-        sexta:   { abertura: '11:00', fechamento: '23:30', pico: [{ inicio: '11:30', fim: '14:30' }, { inicio: '19:00', fim: '22:00' }], baixa: [{ inicio: '15:00', fim: '17:30' }, { inicio: '22:30', fim: '23:30' }] },
-        sabado:  { abertura: '11:30', fechamento: '23:30', pico: [{ inicio: '12:00', fim: '15:00' }, { inicio: '19:30', fim: '22:30' }], baixa: [{ inicio: '15:30', fim: '18:00' }, { inicio: '22:30', fim: '23:30' }] },
-        domingo: { abertura: '11:30', fechamento: '22:00', pico: [{ inicio: '12:00', fim: '15:30' }], baixa: [{ inicio: '16:00', fim: '18:00' }, { inicio: '21:00', fim: '22:00' }] }
-      },
+      dias_semana: JSON.parse(JSON.stringify(DEFAULT_DIAS_SEMANA)),
       historico_movimentos: []
     }
   }
 };
+
+function cadastrarRestaurante({ id, nome, senha }) {
+  if (!id || typeof id !== 'string' || !id.trim()) {
+    return { sucesso: false, mensagem: 'ID do restaurante é obrigatório.' };
+  }
+  if (!nome || typeof nome !== 'string' || !nome.trim()) {
+    return { sucesso: false, mensagem: 'Nome do restaurante é obrigatório.' };
+  }
+  if (!senha || typeof senha !== 'string' || !senha.trim()) {
+    return { sucesso: false, mensagem: 'Senha de acesso é obrigatória.' };
+  }
+
+  // Normalizar ID: minúsculo, substitui caracteres não-alfanuméricos por _
+  const cleanId = id.trim().toLowerCase().replace(/[^a-z0-9_-]/g, '_');
+  if (!cleanId) {
+    return { sucesso: false, mensagem: 'ID do restaurante contém apenas caracteres inválidos.' };
+  }
+
+  if (memoryStore.restaurantes[cleanId]) {
+    return { sucesso: false, mensagem: `O ID "${cleanId}" já está em uso por outro restaurante.` };
+  }
+
+  const novoRest = {
+    id: cleanId,
+    nome: nome.trim(),
+    senha: senha.trim(),
+    simulatedTime: null,
+    dias_semana: JSON.parse(JSON.stringify(DEFAULT_DIAS_SEMANA)),
+    historico_movimentos: []
+  };
+
+  memoryStore.restaurantes[cleanId] = novoRest;
+  console.log(`[Cadastro] Novo restaurante registrado com sucesso: ${cleanId} - "${novoRest.nome}"`);
+
+  return {
+    sucesso: true,
+    mensagem: 'Restaurante cadastrado com sucesso!',
+    restaurante: {
+      id: novoRest.id,
+      nome: novoRest.nome
+    }
+  };
+}
 
 // Dias da semana indexados por getDay() (0 = domingo)
 const DIAS_SEMANA_MAP = ['domingo', 'segunda', 'terca', 'quarta', 'quinta', 'sexta', 'sabado'];
@@ -239,6 +285,24 @@ app.post('/api/auth/login', (req, res) => {
   });
 });
 
+app.post('/api/auth/register', (req, res) => {
+  const { id, restaurante_id, nome, senha } = req.body;
+  const targetId = id || restaurante_id;
+  const resultado = cadastrarRestaurante({ id: targetId, nome, senha });
+  if (!resultado.sucesso) {
+    return res.status(400).json(resultado);
+  }
+  return res.status(201).json(resultado);
+});
+
+app.get('/api/restaurantes', (req, res) => {
+  const lista = Object.values(memoryStore.restaurantes).map((r) => ({
+    id: r.id,
+    nome: r.nome
+  }));
+  return res.json(lista);
+});
+
 app.get('/api/estado/:id', (req, res) => {
   const estado = getEstadoCompleto(req.params.id);
   if (!estado) return res.status(404).json({ erro: 'Restaurante não encontrado' });
@@ -264,6 +328,13 @@ function broadcastEstado(restauranteId) {
 
 io.on('connection', (socket) => {
   console.log(`[Socket] Conexão estabelecida: ${socket.id}`);
+
+  socket.on('cadastrar_restaurante', ({ id, nome, senha }, callback) => {
+    const resultado = cadastrarRestaurante({ id, nome, senha });
+    if (typeof callback === 'function') {
+      callback(resultado);
+    }
+  });
 
   socket.on('entrar_restaurante', ({ restaurante_id, senha, papel }, callback) => {
     const rest = memoryStore.restaurantes[restaurante_id];
@@ -354,19 +425,36 @@ io.on('connection', (socket) => {
 });
 
 // Heartbeat / Tick a cada 5 segundos para reavaliação contínua da janela móvel e transição de horários
-setInterval(() => {
-  for (const restId of Object.keys(memoryStore.restaurantes)) {
-    broadcastEstado(restId);
-  }
-}, 5000);
+let heartbeatInterval = null;
+function startHeartbeat() {
+  if (heartbeatInterval) clearInterval(heartbeatInterval);
+  heartbeatInterval = setInterval(() => {
+    for (const restId of Object.keys(memoryStore.restaurantes)) {
+      broadcastEstado(restId);
+    }
+  }, 5000);
+}
 
-// Inicializar Servidor
-server.listen(PORT, () => {
-  console.log('====================================================');
-  console.log(` V.E.R (Visão Estratégica de Recursos) - Servidor Ativo`);
-  console.log(` URL Local: http://localhost:${PORT}`);
-  console.log(` Credenciais Padrão: rest_01 / admin`);
-  console.log('====================================================');
-});
+// Inicializar Servidor quando executado diretamente
+if (require.main === module) {
+  startHeartbeat();
+  server.listen(PORT, () => {
+    console.log('====================================================');
+    console.log(` V.E.R (Visão Estratégica de Recursos) - Servidor Ativo`);
+    console.log(` URL Local: http://localhost:${PORT}`);
+    console.log(` Credenciais Padrão: rest_01 / admin`);
+    console.log('====================================================');
+  });
+}
 
-module.exports = { app, server, memoryStore, calculateProductionDecision, getTipoHorario, calculate15MinRollingStats, getEstadoCompleto };
+module.exports = {
+  app,
+  server,
+  memoryStore,
+  DEFAULT_DIAS_SEMANA,
+  cadastrarRestaurante,
+  calculateProductionDecision,
+  getTipoHorario,
+  calculate15MinRollingStats,
+  getEstadoCompleto
+};

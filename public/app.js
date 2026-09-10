@@ -89,11 +89,27 @@ const navLoginText = document.getElementById('nav-login-text');
 
 const mainContentArea = document.getElementById('main-content-area');
 
-// Login
+// Login & Cadastro
+const tabBtnLogin = document.getElementById('tab-btn-login');
+const tabBtnRegister = document.getElementById('tab-btn-register');
+const authPanelLogin = document.getElementById('auth-panel-login');
+const authPanelRegister = document.getElementById('auth-panel-register');
+
 const loginForm = document.getElementById('login-form');
 const inputRestId = document.getElementById('input-rest-id');
 const inputSenha = document.getElementById('input-senha');
 const loginError = document.getElementById('login-error');
+
+const registerForm = document.getElementById('register-form');
+const inputRegId = document.getElementById('input-reg-id');
+const inputRegName = document.getElementById('input-reg-name');
+const inputRegSenha = document.getElementById('input-reg-senha');
+const inputRegSenhaConfirm = document.getElementById('input-reg-senha-confirm');
+const registerError = document.getElementById('register-error');
+const registerSuccess = document.getElementById('register-success');
+
+const accountsBadgesList = document.getElementById('accounts-badges-list');
+const btnRefreshAccounts = document.getElementById('btn-refresh-accounts');
 
 // Recepção
 const recRestName = document.getElementById('rec-rest-name');
@@ -253,9 +269,149 @@ window.addEventListener('keydown', (e) => {
 });
 
 // =========================================================
-// 1. FLUXO DE AUTENTICAÇÃO E SELEÇÃO DE PAPEL
+// 1. FLUXO DE AUTENTICAÇÃO E CADASTRO DE RESTAURANTES
 // =========================================================
 
+// Alternância entre Abas: Login e Cadastro
+function switchAuthTab(tab) {
+  if (tab === 'login') {
+    if (tabBtnLogin) tabBtnLogin.classList.add('active');
+    if (tabBtnRegister) tabBtnRegister.classList.remove('active');
+    if (authPanelLogin) authPanelLogin.classList.add('active');
+    if (authPanelRegister) authPanelRegister.classList.remove('active');
+  } else {
+    if (tabBtnLogin) tabBtnLogin.classList.remove('active');
+    if (tabBtnRegister) tabBtnRegister.classList.add('active');
+    if (authPanelLogin) authPanelLogin.classList.remove('active');
+    if (authPanelRegister) authPanelRegister.classList.add('active');
+  }
+
+  if (loginError) loginError.classList.add('hidden');
+  if (registerError) registerError.classList.add('hidden');
+}
+
+if (tabBtnLogin) {
+  tabBtnLogin.addEventListener('click', () => switchAuthTab('login'));
+}
+
+if (tabBtnRegister) {
+  tabBtnRegister.addEventListener('click', () => switchAuthTab('register'));
+}
+
+// Carregar e Exibir Contas Disponíveis no Sistema
+async function carregarContasDisponiveis() {
+  if (!accountsBadgesList) return;
+  try {
+    const res = await fetch('/api/restaurantes');
+    if (!res.ok) return;
+    const contas = await res.json();
+
+    if (!Array.isArray(contas) || contas.length === 0) {
+      accountsBadgesList.innerHTML = '<span class="section-hint">Nenhum restaurante cadastrado no momento.</span>';
+      return;
+    }
+
+    accountsBadgesList.innerHTML = contas.map((c) => `
+      <button type="button" class="account-badge-btn" data-id="${c.id}" title="Clique para selecionar este restaurante">
+        <span class="account-badge-id">${c.id}</span>
+        <span>${c.nome}</span>
+      </button>
+    `).join('');
+
+    // Evento de clique para auto-preenchimento
+    accountsBadgesList.querySelectorAll('.account-badge-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const id = btn.dataset.id;
+        if (inputRestId) {
+          inputRestId.value = id;
+        }
+        switchAuthTab('login');
+        if (inputSenha) {
+          inputSenha.focus();
+        }
+      });
+    });
+  } catch (err) {
+    console.warn('[Contas] Falha ao carregar lista de restaurantes:', err);
+  }
+}
+
+if (btnRefreshAccounts) {
+  btnRefreshAccounts.addEventListener('click', carregarContasDisponiveis);
+}
+
+// Submissão do Formulário de Cadastro
+if (registerForm) {
+  registerForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (registerError) registerError.classList.add('hidden');
+    if (registerSuccess) registerSuccess.classList.add('hidden');
+
+    const id = inputRegId.value.trim();
+    const nome = inputRegName.value.trim();
+    const senha = inputRegSenha.value.trim();
+    const senhaConfirm = inputRegSenhaConfirm.value.trim();
+
+    if (!id) {
+      registerError.textContent = 'Informe o ID do restaurante.';
+      registerError.classList.remove('hidden');
+      return;
+    }
+
+    if (!nome) {
+      registerError.textContent = 'Informe o nome do restaurante.';
+      registerError.classList.remove('hidden');
+      return;
+    }
+
+    if (!senha) {
+      registerError.textContent = 'Informe uma senha de acesso.';
+      registerError.classList.remove('hidden');
+      return;
+    }
+
+    if (senha !== senhaConfirm) {
+      registerError.textContent = 'As senhas digitadas não coincidem. Verifique e tente novamente.';
+      registerError.classList.remove('hidden');
+      return;
+    }
+
+    socket.emit('cadastrar_restaurante', { id, nome, senha }, (response) => {
+      if (!response || !response.sucesso) {
+        registerError.textContent = response ? response.mensagem : 'Erro ao cadastrar restaurante.';
+        registerError.classList.remove('hidden');
+        return;
+      }
+
+      // Sucesso no cadastro
+      registerSuccess.textContent = `✔ ${response.mensagem} O ID "${response.restaurante.id}" está pronto para uso.`;
+      registerSuccess.classList.remove('hidden');
+
+      // Limpa os campos do formulário de cadastro
+      registerForm.reset();
+
+      // Atualiza listagem de contas
+      carregarContasDisponiveis();
+
+      // Preenche o ID no formulário de login e muda para a aba de login após breve intervalo
+      if (inputRestId) {
+        inputRestId.value = response.restaurante.id;
+      }
+      if (inputSenha) {
+        inputSenha.value = '';
+      }
+
+      setTimeout(() => {
+        switchAuthTab('login');
+        if (inputSenha) {
+          inputSenha.focus();
+        }
+      }, 1500);
+    });
+  });
+}
+
+// Submissão do Formulário de Login
 loginForm.addEventListener('submit', (e) => {
   e.preventDefault();
   loginError.classList.add('hidden');
@@ -321,6 +477,7 @@ function handleLogout() {
   if (navLoginText) navLoginText.textContent = 'Login';
   if (navLoginIcon) navLoginIcon.textContent = '🔐';
 
+  carregarContasDisponiveis();
   showScreen('login');
 }
 
@@ -654,5 +811,8 @@ document.getElementById('btn-limpar-fluxo').addEventListener('click', () => {
     socket.emit('limpar_historico', { restaurante_id: appState.restauranteId });
   }
 });
+
+// Inicialização: carregar contas cadastradas na inicialização
+carregarContasDisponiveis();
 
 

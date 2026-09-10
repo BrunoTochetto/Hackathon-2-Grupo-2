@@ -1,5 +1,12 @@
 const assert = require('assert');
-const { calculateProductionDecision, getTipoHorario, calculate15MinRollingStats } = require('../server');
+const {
+  calculateProductionDecision,
+  getTipoHorario,
+  calculate15MinRollingStats,
+  cadastrarRestaurante,
+  getEstadoCompleto,
+  memoryStore
+} = require('../server');
 
 console.log("=== INICIANDO TESTES DO MOTOR V.E.R (VISÃO ESTRATÉGICA DE RECURSOS) ===");
 
@@ -95,7 +102,70 @@ valor = assert.strictEqual(stats.saidas_15min, 2, 'Total de saídas válidas dev
 valor = assert.strictEqual(stats.saldo_fluxo_15min, 4, 'Saldo deve ser 6 - 2 = 4');
 console.log("  ✔ Cálculo da Janela Móvel de 15 Minutos: PASSOU");
 
+// ----------------------------------------------------
+// TESTE 4: CADASTRO DE CONTAS / RESTAURANTES
+// ----------------------------------------------------
+console.log("\n[4] Testando Cadastro de Novas Contas...");
+
+// 4.1 Cadastro com sucesso
+const resCad1 = cadastrarRestaurante({
+  id: 'rest_filial_02',
+  nome: 'V.E.R Filial Shopping',
+  senha: 'senha_filial_123'
+});
+assert.strictEqual(resCad1.sucesso, true, 'Deve cadastrar restaurante com sucesso');
+assert.strictEqual(resCad1.restaurante.id, 'rest_filial_02', 'ID retornado deve coincidir');
+assert(memoryStore.restaurantes['rest_filial_02'] !== undefined, 'Restaurante deve constar no memoryStore');
+assert(memoryStore.restaurantes['rest_filial_02'].dias_semana.segunda !== undefined, 'Grade semanal padrão deve estar preenchida');
+console.log("  ✔ Cadastro de nova conta com grade padrão: PASSOU");
+
+// 4.2 Rejeição de ID duplicado
+const resCadDuplicado = cadastrarRestaurante({
+  id: 'rest_filial_02',
+  nome: 'Outra Filial com Mesmo ID',
+  senha: '123'
+});
+assert.strictEqual(resCadDuplicado.sucesso, false, 'Deve rejeitar cadastro com ID já existente');
+console.log("  ✔ Rejeição de ID duplicado: PASSOU");
+
+// 4.3 Rejeição de campos obrigatórios vazios
+const resCadSemNome = cadastrarRestaurante({ id: 'rest_novo', nome: '', senha: '123' });
+assert.strictEqual(resCadSemNome.sucesso, false, 'Deve rejeitar cadastro sem nome');
+const resCadSemSenha = cadastrarRestaurante({ id: 'rest_novo', nome: 'Novo', senha: '' });
+assert.strictEqual(resCadSemSenha.sucesso, false, 'Deve rejeitar cadastro sem senha');
+console.log("  ✔ Validações de campos obrigatórios: PASSOU");
+
+// ----------------------------------------------------
+// TESTE 5: ISOLAMENTO ENTRE RESTAURANTES CONECTADOS
+// ----------------------------------------------------
+console.log("\n[5] Testando Isolamento de Dados entre Restaurantes...");
+
+// Inserir fluxo no rest_01
+memoryStore.restaurantes['rest_01'].historico_movimentos = [
+  { tipo: 'ENTRADA', quantidade: 15, timestamp: Date.now() }
+];
+
+// Inserir fluxo oposto no rest_filial_02
+memoryStore.restaurantes['rest_filial_02'].historico_movimentos = [
+  { tipo: 'SAIDA', quantidade: 10, timestamp: Date.now() }
+];
+
+const estadoRest01 = getEstadoCompleto('rest_01');
+const estadoRest02 = getEstadoCompleto('rest_filial_02');
+
+assert.strictEqual(estadoRest01.restaurante_id, 'rest_01');
+assert.strictEqual(estadoRest01.saldo_fluxo_15min, 15, 'Saldo do rest_01 deve ser +15');
+assert.strictEqual(estadoRest01.entradas_15min, 15, 'Entradas do rest_01 deve ser 15');
+assert.strictEqual(estadoRest01.saidas_15min, 0, 'Saídas do rest_01 deve ser 0');
+
+assert.strictEqual(estadoRest02.restaurante_id, 'rest_filial_02');
+assert.strictEqual(estadoRest02.saldo_fluxo_15min, -10, 'Saldo do rest_filial_02 deve ser -10');
+assert.strictEqual(estadoRest02.entradas_15min, 0, 'Entradas do rest_filial_02 deve ser 0');
+assert.strictEqual(estadoRest02.saidas_15min, 10, 'Saídas do rest_filial_02 deve ser 10');
+
+console.log("  ✔ Isolamento de métricas e histórico entre restaurantes: PASSOU");
+
 console.log("\n====================================================");
-console.log(" TODOS OS TESTES PASSARAM COM SUCESSO! (100% OK) "); // Aham, obrigado IA
+console.log(" TODOS OS TESTES PASSARAM COM SUCESSO! (100% OK) ");
 console.log("====================================================\n");
 process.exit(0);

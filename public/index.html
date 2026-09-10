@@ -57,7 +57,7 @@
     <main class="app-content-area" id="main-content-area">
 
       <!-- ==================================================== -->
-      <!-- 1. TELA DE LOGIN / SELEÇÃO DE PERFIL                 -->
+      <!-- 1. TELA DE LOGIN & CADASTRO DE RESTAURANTES          -->
       <!-- ==================================================== -->
       <section id="view-login" class="screen-view active">
         <div class="login-card">
@@ -66,49 +66,106 @@
             <p>Visão Estratégica de Recursos</p>
           </div>
 
-          <form id="login-form">
-            <div class="form-group">
-              <label for="input-rest-id">ID do Restaurante</label>
-              <input type="text" id="input-rest-id" value="rest_01" required autocomplete="username">
-            </div>
-
-            <div class="form-group">
-              <label for="input-senha">Senha de Acesso</label>
-              <input type="password" id="input-senha" value="admin" required autocomplete="current-password">
-            </div>
-
-            <div class="form-group">
-              <label>Selecione o Terminal / Perfil:</label>
-              <div class="role-selector">
-                <label class="role-option">
-                  <input type="radio" name="role" value="RECEPCAO" checked>
-                  <div class="role-box">
-                    <span class="role-icon">📋</span>
-                    <span class="role-title">Recepção</span>
-                    <span class="role-desc">Registro de fluxo e horários</span>
-                  </div>
-                </label>
-
-                <label class="role-option">
-                  <input type="radio" name="role" value="COZINHA">
-                  <div class="role-box">
-                    <span class="role-icon">🔥</span>
-                    <span class="role-title">Cozinha</span>
-                    <span class="role-desc">Display visual de produção</span>
-                  </div>
-                </label>
-              </div>
-            </div>
-
-            <div id="login-error" class="error-msg hidden"></div>
-
-            <button type="submit" id="btn-login" class="btn-primary-large">
-              Entrar
+          <!-- Abas de Navegação entre Entrar e Cadastrar -->
+          <div class="auth-tabs">
+            <button type="button" class="auth-tab active" id="tab-btn-login">
+              <span>🔐 Entrar</span>
             </button>
-          </form>
+            <button type="button" class="auth-tab" id="tab-btn-register">
+              <span>➕ Criar Conta</span>
+            </button>
+          </div>
+
+          <!-- PAINEL 1: ENTRAR -->
+          <div id="auth-panel-login" class="auth-panel active">
+            <form id="login-form">
+              <div class="form-group">
+                <label for="input-rest-id">ID do Restaurante</label>
+                <input type="text" id="input-rest-id" value="rest_01" required autocomplete="username" placeholder="ex: rest_01">
+              </div>
+
+              <div class="form-group">
+                <label for="input-senha">Senha de Acesso</label>
+                <input type="password" id="input-senha" value="admin" required autocomplete="current-password" placeholder="Sua senha">
+              </div>
+
+              <div class="form-group">
+                <label>Selecione o Terminal / Perfil:</label>
+                <div class="role-selector">
+                  <label class="role-option">
+                    <input type="radio" name="role" value="RECEPCAO" checked>
+                    <div class="role-box">
+                      <span class="role-icon">📋</span>
+                      <span class="role-title">Recepção</span>
+                      <span class="role-desc">Registro de fluxo e horários</span>
+                    </div>
+                  </label>
+
+                  <label class="role-option">
+                    <input type="radio" name="role" value="COZINHA">
+                    <div class="role-box">
+                      <span class="role-icon">🔥</span>
+                      <span class="role-title">Cozinha</span>
+                      <span class="role-desc">Display visual de produção</span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              <div id="login-error" class="error-msg hidden"></div>
+
+              <button type="submit" id="btn-login" class="btn-primary-large">
+                Entrar
+              </button>
+            </form>
+          </div>
+
+          <!-- PAINEL 2: CRIAR CONTA / CADASTRO -->
+          <div id="auth-panel-register" class="auth-panel">
+            <form id="register-form">
+              <div class="form-group">
+                <label for="input-reg-id">ID do Restaurante (Identificador Único)</label>
+                <input type="text" id="input-reg-id" required autocomplete="off" placeholder="ex: filial_centro, rest_02">
+                <span class="input-hint">Será usado para fazer login e isolar seus dados.</span>
+              </div>
+
+              <div class="form-group">
+                <label for="input-reg-name">Nome do Estabelecimento / Restaurante</label>
+                <input type="text" id="input-reg-name" required autocomplete="organization" placeholder="ex: V.E.R Filial Centro">
+              </div>
+
+              <div class="form-group">
+                <label for="input-reg-senha">Senha de Acesso</label>
+                <input type="password" id="input-reg-senha" required autocomplete="new-password" placeholder="Digite uma senha">
+              </div>
+
+              <div class="form-group">
+                <label for="input-reg-senha-confirm">Confirmar Senha</label>
+                <input type="password" id="input-reg-senha-confirm" required autocomplete="new-password" placeholder="Repita a senha">
+              </div>
+
+              <div id="register-error" class="error-msg hidden"></div>
+              <div id="register-success" class="success-msg hidden"></div>
+
+              <button type="submit" id="btn-register" class="btn-primary-large btn-register-submit">
+                Cadastrar Restaurante
+              </button>
+            </form>
+          </div>
+
+          <!-- LISTAGEM RÁPIDA DE CONTAS CADASTRADAS -->
+          <div class="registered-accounts-section">
+            <div class="accounts-section-header">
+              <span>Contas de teste no Sistema:</span>
+              <button type="button" id="btn-refresh-accounts" class="btn-link-refresh" title="Atualizar Lista">🔄 Atualizar</button>
+            </div>
+            <div class="accounts-badges-list" id="accounts-badges-list">
+              <!-- Renderizado via JS -->
+            </div>
+          </div>
 
           <div class="login-footer">
-            <p><small>Abra abas simultâneas como <strong>Recepção</strong> e <strong>Cozinha</strong> para testar a sincronização.</small></p>
+            <p><small>Abra abas simultâneas como <strong>Recepção</strong> e <strong>Cozinha</strong> em diferentes restaurantes para testar o isolamento.</small></p>
           </div>
         </div>
       </section>

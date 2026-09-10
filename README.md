@@ -14,9 +14,6 @@ O sistema opera **sem necessidade de cadastrar alimentos individuais**, orientan
 ### 1. Pré-requisitos
 - Node.js instalado (v18+ ou v20 LTS).
 
-### 2. Instalação e Inicialização
-No terminal, dentro da pasta do projeto (`C:\Users\maria\.gemini\antigravity\scratch\smartbuffet-stream`):
-
 ```bash
 npm install
 npm start
@@ -25,20 +22,26 @@ npm start
 O servidor iniciará em:
 👉 **`http://localhost:3000`**
 
-### 3. Credenciais Padrão para Demonstração
-- **ID do Restaurante:** `rest_01`
-- **Senha:** `admin`
+### 3. Credenciais Padrão & Cadastro de Novas Contas
+- **Conta Matriz Inicial:** ID `rest_01` / Senha `admin`
+- **Cadastro de Novas Contas:** Na tela inicial, clique na aba **"➕ Criar Conta"**, informe um ID único (ex: `filial_centro`), o Nome do Estabelecimento e a Senha.
+- As contas criadas recebem automaticamente a grade de horários padrão e operam com canais WebSocket e históricos 100% isolados.
 
 ---
 
-## 💻 Cenário de Teste Prático (Duas Abas)
+## 💻 Cenário de Teste Prático (Múltiplas Contas & Abas)
 
-Para experimentar o stream contínuo via WebSocket:
+Para experimentar o stream contínuo e o isolamento entre múltiplos restaurantes:
 
-1. Abra uma aba no navegador em `http://localhost:3000`, selecione o perfil **Recepção** e faça login.
-2. Abra uma segunda aba (ou janela anônima) em `http://localhost:3000`, selecione o perfil **Cozinha** e faça login.
-3. Na **Recepção**, clique nos botões de fluxo (`+1 Cliente`, `+5 Clientes`, `-1 Cliente`, `-5 Clientes`).
-4. Observe na tela da **Cozinha** a atualização imediata das cores, comando e estatísticas sem recarregar a página.
+1. **Conta 1 (Matriz):**
+   - Em uma aba em `http://localhost:3000`, faça login no `rest_01` como **Recepção**.
+   - Em outra aba, faça login no `rest_01` como **Cozinha**.
+2. **Conta 2 (Nova Filial):**
+   - Clique em **"➕ Criar Conta"** e cadastre um novo restaurante (ex: ID `filial_sul`, Nome `V.E.R Filial Sul`, Senha `123`).
+   - Abra duas novas abas para a `filial_sul` (uma como **Recepção** e outra como **Cozinha**).
+3. **Validação de Isolamento em Tempo Real:**
+   - Lance clientes na **Recepção** da `filial_sul`.
+   - Observe que **apenas a tela da Cozinha da `filial_sul` reage**, enquanto a Matriz (`rest_01`) permanece inalterada.
 
 ---
 
